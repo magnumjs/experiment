@@ -4,7 +4,11 @@ on:
   push:
     branches:
       - master
-
+# Add "id-token" with the intended permissions. 
+permissions:
+  contents: 'read'
+  id-token: 'write'
+  
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
