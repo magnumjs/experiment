@@ -11,11 +11,10 @@
 # CMD ["node", "index.js"]
 
 
-FROM public.ecr.aws/lambda/nodejs:18
-
-COPY package.json package-lock.json /var/task/
-WORKDIR /var/task
+FROM public.ecr.aws/lambda/nodejs:20
+WORKDIR /app
+COPY node-frontend/package.json package-lock.json ./
 RUN npm install
-COPY index.js lambda.js /var/task/
+COPY node-frontend ./
 
 CMD [ "lambda.handler" ]
