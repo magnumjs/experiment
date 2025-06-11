@@ -30,9 +30,9 @@ jobs:
 
       - name: Build, tag, and push image to Amazon ECR
         run: |
-          ECR_REGISTRY="475057824660.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com"
+          ECR_REGISTRY="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com"
           IMAGE_NAME="${{ secrets.ECR_REPOSITORY }}"
-          IMAGE_TAG="latest"
+          IMAGE_TAG="${{ github.sha }}"
           if [ -z "$ECR_REGISTRY" ] || [ -z "$IMAGE_NAME" ] || [ -z "$IMAGE_TAG" ]; then
             echo "ECR_REGISTRY, IMAGE_NAME, or IMAGE_TAG is empty. Check your secrets." && exit 1
           fi
