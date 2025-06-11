@@ -32,7 +32,7 @@ jobs:
         run: |
           ECR_REGISTRY="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com"
           IMAGE_NAME="${{ secrets.ECR_REPOSITORY }}"
-          IMAGE_TAG="${{ github.sha }}"
+          IMAGE_TAG="latest"
           if [ -z "$ECR_REGISTRY" ] || [ -z "$IMAGE_NAME" ] || [ -z "$IMAGE_TAG" ]; then
             echo "ECR_REGISTRY, IMAGE_NAME, or IMAGE_TAG is empty. Check your secrets." && exit 1
           fi
