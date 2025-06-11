@@ -28,17 +28,17 @@ jobs:
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build Docker image
+      - name: Build, tag, and push image to Amazon ECR
         run: |
-          docker build -t ${{ secrets.ECR_REPOSITORY }}:latest .
-
-      - name: Tag Docker image
-        run: |
-          docker tag ${{ secrets.ECR_REPOSITORY }}:latest ${{ secrets.ECR_REPOSITORY }}:latest
-
-      - name: Push Docker image to AWS ECR
-        run: |
-          docker push ${{ secrets.ECR_REPOSITORY }}:latest
+          ECR_REGISTRY="475057824660.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com"
+          IMAGE_NAME="${{ secrets.ECR_REPOSITORY }}"
+          IMAGE_TAG="latest"
+          if [ -z "$ECR_REGISTRY" ] || [ -z "$IMAGE_NAME" ] || [ -z "$IMAGE_TAG" ]; then
+            echo "ECR_REGISTRY, IMAGE_NAME, or IMAGE_TAG is empty. Check your secrets." && exit 1
+          fi
+          docker build -t $IMAGE_NAME:$IMAGE_TAG .
+          docker tag $IMAGE_NAME:$IMAGE_TAG $ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
       # - name: Deploy to AWS (ECS update)
       #   run: |
       #     aws ecs update-service --cluster ${{ secrets.ECS_CLUSTER_NAME }} --service ${{ secrets.ECS_SERVICE_NAME }} --force-new-deployment --region ${{ secrets.AWS_REGION }}
