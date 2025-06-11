@@ -12,8 +12,10 @@
 
 
 FROM public.ecr.aws/lambda/nodejs:20
+
 WORKDIR /app
-COPY node-frontend/package.json package-lock.json ./
+
+COPY node-frontend/package.json ./
 RUN npm install
 COPY node-frontend ./
 
