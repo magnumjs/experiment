@@ -3,9 +3,9 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-COPY node-frontend/package.json ./
+COPY package.json ./
 RUN npm install
-COPY node-frontend ./
+COPY . .
 
 EXPOSE 3000
 CMD ["node", "index.js"]
