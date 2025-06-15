@@ -1,0 +1,29 @@
+name: Deploy to EC2 on Push to Main
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+
+      - name: Deploy over SSH
+        run: |
+          ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
+            cd ~/app
+            git pull origin main
+            docker stop my-app || true
+            docker rm my-app || true
+            docker build -t my-app .
+            docker run -d -p 80:3000 --name my-app my-app
+          EOF
